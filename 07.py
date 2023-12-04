@@ -1,15 +1,25 @@
-def data_preparation(list_data):
-    merged_list = []
+def decode(data):
+    decoded_list = []
 
-    for sublist in list_data:
-        if len(sublist) > 2:
-            sublist = sorted(sublist)[1:-1]  # Видаляємо найбільше і найменше значення зі списку
-        merged_list.extend(sublist)  # Додаємо елементи списку до загального списку
+    if not data:
+        return decoded_list
 
-    merged_list.sort(reverse=True)  # Сортуємо загальний список у зворотньому порядку (за зменшенням)
+    value = data[0]
+    count = data[1]
 
-    return merged_list
+    if isinstance(value, list):
+        # Рекурсивно декодуємо вкладений список
+        decoded_value = decode(value)
+    else:
+        decoded_value = [value]
 
+    decoded_list.extend(decoded_value * count)
 
-a = data_preparation([[1,2,3],[3,4], [5,6]])
-print(a)
+    # Рекурсивно викликаємо функцію для обробки решти списку
+    decoded_list.extend(decode(data[2:]))
+
+    return decoded_list
+
+# Приклад використання:
+decoded_list = decode(["X", 5, "Z", 2, "X", 2, "Y", 3, "Z", 2])
+print(decoded_list)
